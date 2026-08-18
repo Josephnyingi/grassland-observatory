@@ -13,6 +13,13 @@ The dashboard therefore helps users:
 
 This is a screening tool, not a movement instruction or weather forecast. Recommendations must be checked against water availability, land tenure, conflict risk, resource ownership and local authority guidance.
 
+## Data sources
+
+- **Ward and county boundaries** (`data/ASAL_wards.geojson`, `data/ASAL_Counties.geojson`): the 45 wards of Samburu, Marsabit and Isiolo, from HDX's [Administrative Wards in Kenya (1450)](https://data.humdata.org/dataset/administrative-wards-in-kenya-1450) dataset.
+- **Grassland cover raster** (`data/Raster/esa_grassland_samburu_marsabit_isiolo.tif`): reclassified from [ESA WorldCover 10m v200 (2021)](https://esa-worldcover.org/), grassland class only, downsampled to 30 m.
+- **Place-name gazetteer** (`data/gazetteer/KE.zip`): the Kenya extract from [GeoNames](https://www.geonames.org/).
+- **Ward-month indicators (NDVI, rainfall, temperature, MSDI, GCI)** (`data/merged_ward_indicators_with_gci.csv`): synthetic, generated to match this repo's GCI formula and this region's documented climate history — the bimodal long/short rains cycle, the 2020–2023 Horn of Africa drought and the 2023 El Niño short-rains recovery — since the original satellite-derived export was lost. Not a live Earth Engine feed; replace with a real GEE export before using this for operational decisions.
+
 ## Indicators and formulas
 
 ### Grazing Condition Index

@@ -97,6 +97,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This is a screening tool, not a movement instruction or weather forecast. Recommendations must be checked against water availability, land tenure, conflict risk, resource ownership and local authority guidance.</p>
 </section>
+<section id="data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
+<ul>
+<li><strong>Ward and county boundaries</strong> (<code>data/ASAL_wards.geojson</code>, <code>data/ASAL_Counties.geojson</code>): the 45 wards of Samburu, Marsabit and Isiolo, from HDX’s Administrative Wards in Kenya (1450) dataset.</li>
+<li><strong>Grassland cover raster</strong> (<code>data/Raster/esa_grassland_samburu_marsabit_isiolo.tif</code>): reclassified from ESA WorldCover 10m v200 (2021), grassland class only, downsampled to 30 m.</li>
+<li><strong>Place-name gazetteer</strong> (<code>data/gazetteer/KE.zip</code>): the Kenya extract from GeoNames.</li>
+<li><strong>Ward-month indicators (NDVI, rainfall, temperature, MSDI, GCI)</strong> (<code>data/merged_ward_indicators_with_gci.csv</code>): synthetic, generated to match this repo’s GCI formula and this region’s documented climate history — the bimodal long/short rains cycle, the 2020–2023 Horn of Africa drought and the 2023 El Niño short-rains recovery — since the original satellite-derived export was lost. Not a live Earth Engine feed; replace with a real GEE export before using this for operational decisions.</li>
+</ul>
+</section>
 <section id="indicators-and-formulas" class="level2">
 <h2 class="anchored" data-anchor-id="indicators-and-formulas">Indicators and formulas</h2>
 <section id="grazing-condition-index" class="level3">

@@ -1,7 +1,7 @@
 __pycache__/
 *.py[cod]
 .DS_Store
-data/
+.venv/
 
 README_files/
 modules/__pycache__/
