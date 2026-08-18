@@ -301,6 +301,8 @@ def resource_management_server(input, output, session):
         months = sorted(
             AVAILABLE_DATES.loc[AVAILABLE_DATES["date"].dt.year == int(input.year()), "date"].dt.month.unique()
         )
+        if not months:
+            return
         current = int(input.month()) if input.month() else max(months)
         selected = current if current in months else max(months)
         ui.update_select(
@@ -316,6 +318,8 @@ def resource_management_server(input, output, session):
         valid_months = sorted(
             AVAILABLE_DATES.loc[AVAILABLE_DATES["date"].dt.year == year, "date"].dt.month.unique()
         )
+        if not valid_months:
+            return LATEST_DATE
         requested = int(input.month()) if input.month() else max(valid_months)
         month = requested if requested in valid_months else max(valid_months)
         return pd.Timestamp(year=year, month=month, day=1)

@@ -178,6 +178,8 @@ def drought_monitor_server(input, output, session):
                 AVAILABLE_DATES["date"].dt.year == int(input.year()), "date"
             ].dt.month.unique()
         )
+        if not months:
+            return
         selected = input.month() if input.month() and int(input.month()) in months else str(max(months))
         ui.update_select(
             "month",
@@ -192,6 +194,8 @@ def drought_monitor_server(input, output, session):
         valid_months = sorted(
             AVAILABLE_DATES.loc[AVAILABLE_DATES["date"].dt.year == year, "date"].dt.month.unique()
         )
+        if not valid_months:
+            return LATEST_DATE
         requested_month = int(input.month()) if input.month() else max(valid_months)
         month = requested_month if requested_month in valid_months else max(valid_months)
         return pd.Timestamp(year=year, month=month, day=1)
