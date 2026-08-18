@@ -53,7 +53,7 @@ app_ui = ui.page_navbar(
         ui.include_js("www/resource-location.js"),
     ),
     footer=ui.div(
-        ui.span("© GeoObservatory 2026"),
+        ui.span("© Rangeland Observatory Dashboard 2026"),
         class_="app-footer",
     ),
 )

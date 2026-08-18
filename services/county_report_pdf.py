@@ -181,7 +181,7 @@ def build_county_report_pdf(*, county: str, selected_date, condition: str, summa
 
     canvas.setStrokeColor(LINE)
     canvas.line(32, 33, PAGE_W - 32, 33)
-    _text(canvas, "© GeoObservatory 2026", 32, 19, 6.4, MUTED)
+    _text(canvas, "© Rangeland Observatory Dashboard 2026", 32, 19, 6.4, MUTED)
     _right_text(canvas, "County planning brief", PAGE_W - 32, 19, 6.4, MUTED)
     canvas.save()
     return stream.getvalue()

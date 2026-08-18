@@ -50,7 +50,6 @@ Each component is normalized to a common 0–100 scale before weighting. Tempera
 - **Temperature:** monthly land-surface temperature in degrees Celsius. Negative source values are treated as missing data.
 - **MSDI:** the moving standard deviation of the Landsat 8/9 OLI red band in a 3 × 3-pixel neighbourhood
 
-
 ### Long-term monthly reference
 
 The reference line is fixed by calendar month. For example, the January reference is the mean of all available January county observations across the full archive.
@@ -63,6 +62,16 @@ For the next calendar month, the county report fits a linear trend to prior obse
 ## Technology stack
 
 - **Application:** Python, Shiny for Python, Uvicorn and Starlette
+- **Analysis:** pandas and NumPy
+- **Vector geospatial processing:** GeoPandas and Shapely
+- **Resource storage:** GeoPackage through Pyogrio
+- **Maps:** MapLibre GL JS with OpenFreeMap basemaps
+- **Raster tiles:** Rio-tiler serving the local cloud-optimized GeoTIFF on demand
+- **Charts:** Plotly
+- **Reports:** ReportLab PDF generation
+- **Place search:** packaged GeoNames Kenya gazetteer
+- **Interface:** HTML, CSS, Bootstrap icons and small JavaScript helpers loaded by Shiny
+- **Deployment:** Docker image run as a Cloudflare Container, fronted by a Cloudflare Worker (see [Deploy](#deploy))
 
 ## Project layout
 
@@ -71,7 +80,13 @@ app.py                  Shiny application and ASGI entry point
 modules/                Overview, grassland health and county planning UI/server modules
 services/               Climate, spatial, raster, resource and PDF services
 www/                    Styles and browser-side map/location helpers
+data/                   Ward/county boundaries, grassland raster, gazetteer and climate archive (see Data sources)
+output/                 Sample generated artifacts (e.g. a county report PDF)
 requirements.txt        Python runtime dependencies
+Dockerfile              Container image used for the Cloudflare deployment
+wrangler.jsonc          Cloudflare Worker + Container configuration
+package.json            Node dependencies for the Wrangler deploy tooling
+src/index.js            Worker entry point that proxies requests to the container
 ```
 
 ## Install and launch
@@ -94,4 +109,19 @@ To stop the server, press `Ctrl+C`. To leave the virtual environment:
 deactivate
 ```
 
+For access from another machine on the same trusted network, bind to all interfaces:
 
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
+
+## Deploy
+
+The live deployment runs as a [Cloudflare Container](https://developers.cloudflare.com/containers/) behind a Worker (Cloudflare Pages cannot run this app directly — it's a full Python ASGI backend, not static assets). Requires Node.js and a Cloudflare account on the Workers Paid plan.
+
+```bash
+npm install
+npx wrangler deploy
+```
+
+This builds the image from the `Dockerfile`, pushes it to Cloudflare's registry, and deploys the Worker in `src/index.js` that proxies every request to the container.

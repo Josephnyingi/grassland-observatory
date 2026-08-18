@@ -196,6 +196,7 @@ forecast = intercept + slope × target_year
 <li><strong>Reports:</strong> ReportLab PDF generation</li>
 <li><strong>Place search:</strong> packaged GeoNames Kenya gazetteer</li>
 <li><strong>Interface:</strong> HTML, CSS, Bootstrap icons and small JavaScript helpers loaded by Shiny</li>
+<li><strong>Deployment:</strong> Docker image run as a Cloudflare Container, fronted by a Cloudflare Worker (see <a href="#deploy">Deploy</a>)</li>
 </ul>
 </section>
 <section id="project-layout" class="level2">
@@ -204,7 +205,13 @@ forecast = intercept + slope × target_year
 modules/                Overview, grassland health and county planning UI/server modules
 services/               Climate, spatial, raster, resource and PDF services
 www/                    Styles and browser-side map/location helpers
-requirements.txt        Python runtime dependencies</code></pre>
+data/                   Ward/county boundaries, grassland raster, gazetteer and climate archive (see Data sources)
+output/                 Sample generated artifacts (e.g. a county report PDF)
+requirements.txt        Python runtime dependencies
+Dockerfile              Container image used for the Cloudflare deployment
+wrangler.jsonc          Cloudflare Worker + Container configuration
+package.json            Node dependencies for the Wrangler deploy tooling
+src/index.js            Worker entry point that proxies requests to the container</code></pre>
 </section>
 <section id="install-and-launch" class="level2">
 <h2 class="anchored" data-anchor-id="install-and-launch">Install and launch</h2>
@@ -219,6 +226,13 @@ requirements.txt        Python runtime dependencies</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">deactivate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>For access from another machine on the same trusted network, bind to all interfaces:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uvicorn</span> app:app <span class="at">--host</span> 0.0.0.0 <span class="at">--port</span> 8000</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="deploy" class="level2">
+<h2 class="anchored" data-anchor-id="deploy">Deploy</h2>
+<p>The live deployment runs as a <a href="https://developers.cloudflare.com/containers/">Cloudflare Container</a> behind a Worker (Cloudflare Pages cannot run this app directly — it's a full Python ASGI backend, not static assets). Requires Node.js and a Cloudflare account on the Workers Paid plan.</p>
+<pre class="text"><code>npm install
+npx wrangler deploy</code></pre>
+<p>This builds the image from the <code>Dockerfile</code>, pushes it to Cloudflare's registry, and deploys the Worker in <code>src/index.js</code> that proxies every request to the container.</p>
 </section>
 </section>
 
