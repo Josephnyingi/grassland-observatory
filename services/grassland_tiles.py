@@ -26,7 +26,10 @@ GRASSLAND_COLORMAP = {
 @lru_cache(maxsize=1024)
 def _tile_bytes(z: int, x: int, y: int) -> bytes | None:
     """Read one XYZ tile from the COG and display only grassland value 1."""
-    if z < MIN_ZOOM or z > MAX_ZOOM or x < 0 or y < 0:
+    if z < MIN_ZOOM or z > MAX_ZOOM:
+        return None
+    tiles_per_axis = 2**z
+    if not (0 <= x < tiles_per_axis) or not (0 <= y < tiles_per_axis):
         return None
     try:
         with COGReader(COG_PATH) as cog:
