@@ -1,4 +1,4 @@
-# [Rangeland Observatory Dashboard](https://grasslandobservatory.ccb-technologies.co.ke/)
+# [Rangeland Observatory Dashboard](https://grassland-observatory.josenyingi.workers.dev)
 
 Rangeland Observatory Dashboard is a ward-level grassland monitoring and county planning dashboard for Kenya's arid and semi-arid lands (ASALs). It combines vegetation, rainfall, temperature and surface-variability observations with local resource information to support early field verification and grazing decisions.
 
