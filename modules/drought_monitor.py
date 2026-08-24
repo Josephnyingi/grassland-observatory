@@ -16,7 +16,7 @@ from services.grassland_health import (
 )
 from services.gee_climate import climate_data
 from services.grassland_tiles import MAX_ZOOM, MIN_ZOOM, TILE_BOUNDS, TILE_URL
-from .data import AOIS
+from .data import AOIS, i18n_slug
 from .loading import loading_frame
 from .maplibre import map_container
 
@@ -36,11 +36,12 @@ LATEST_MONTH_CHOICES = {
 
 
 def _gci_signal(icon: str, weight: str, name: str, description: str, direction: str):
+    key = i18n_slug(name)
     return ui.div(
         ui.div(ui.tags.i(class_=f"bi {icon}"), ui.span(weight), class_="gci-signal-head"),
-        ui.strong(name),
-        ui.p(description),
-        ui.span(direction, class_="gci-direction"),
+        ui.strong(name, data_i18n=f"gci_signal.{key}.name"),
+        ui.p(description, data_i18n=f"gci_signal.{key}.description"),
+        ui.span(direction, class_="gci-direction", data_i18n=f"gci_signal.{key}.direction"),
         class_="gci-signal-card",
     )
 
@@ -49,13 +50,13 @@ def gci_context_panel():
     return ui.tags.section(
         ui.div(
             ui.div(
-                ui.span("HOW TO READ THE INDEX", class_="gci-kicker"),
-                ui.h2("One grazing score, four environmental signals"),
-                ui.p("GCI combines normalized satellite and climate observations into a 0–100 monthly ward score. Higher values indicate more favorable grazing conditions."),
+                ui.span("HOW TO READ THE INDEX", class_="gci-kicker", data_i18n="gci_panel.kicker"),
+                ui.h2("One grazing score, four environmental signals", data_i18n="gci_panel.heading"),
+                ui.p("GCI combines normalized satellite and climate observations into a 0–100 monthly ward score. Higher values indicate more favorable grazing conditions.", data_i18n="gci_panel.subtitle"),
             ),
             ui.div(
                 ui.span("0", class_="gci-score-edge"),
-                ui.div(ui.strong("GCI"), ui.span("Monthly ward condition")),
+                ui.div(ui.strong("GCI"), ui.span("Monthly ward condition", data_i18n="gci_panel.score_mark_note")),
                 ui.span("100", class_="gci-score-edge"),
                 class_="gci-score-mark",
             ),
@@ -70,14 +71,14 @@ def gci_context_panel():
         ),
         ui.div(
             ui.code("GCI = 0.35(NDVI) + 0.25(rainfall) + 0.20(reversed temperature) + 0.20(reversed MSDI)"),
-            ui.span("All components are normalized to a common 0–100 scale before weighting."),
+            ui.span("All components are normalized to a common 0–100 scale before weighting.", data_i18n="gci_panel.formula_note"),
             class_="gci-formula",
         ),
         ui.div(
             *[
                 ui.div(
                     ui.span(class_="gci-class-color", style=f"background:{STATUS_COLORS[label]}"),
-                    ui.strong(label),
+                    ui.strong(label, data_i18n=f"gci_class.{i18n_slug(label)}"),
                     ui.span(score_range),
                     class_="gci-class-item",
                 )
@@ -100,12 +101,12 @@ def drought_monitor_ui():
     return ui.div(
         ui.div(
             ui.div(
-                ui.tags.span("GRASSLAND EARLY ACTION", class_="eyebrow"),
-                ui.h1("Grassland health intelligence"),
-                ui.p("Track the supplied Grazing Condition Index across wards and identify areas requiring attention or offering stronger conditions."),
+                ui.tags.span("GRASSLAND EARLY ACTION", class_="eyebrow", data_i18n="drought.eyebrow"),
+                ui.h1("Grassland health intelligence", data_i18n="drought.heading"),
+                ui.p("Track the supplied Grazing Condition Index across wards and identify areas requiring attention or offering stronger conditions.", data_i18n="drought.subtitle"),
                 ui.div(
-                    ui.span(ui.tags.i(class_="bi bi-flower1"), " Ward-level analysis"),
-                    ui.span("GCI · NDVI · rainfall · temperature"),
+                    ui.span(ui.tags.i(class_="bi bi-flower1"), ui.span(" Ward-level analysis", data_i18n="drought.chip_ward_level")),
+                    ui.span("GCI · NDVI · rainfall · temperature", data_i18n="drought.chip_signals"),
                     class_="hero-chips light-chips",
                 ),
             ),
@@ -117,36 +118,36 @@ def drought_monitor_ui():
             ui.card(
                 ui.card_header(
                     ui.div(
-                        ui.span("Ward grazing conditions"),
+                        ui.span("Ward grazing conditions", data_i18n="drought.map_card_title"),
                         ui.output_ui("map_date"),
                         class_="map-title-row",
                     ),
                     ui.div(
-                        ui.input_select("aoi", "Focus county", AOIS),
-                        ui.input_select("year", "Year", YEAR_CHOICES, selected=str(LATEST_DATE.year)),
-                        ui.input_select("month", "Month", LATEST_MONTH_CHOICES, selected=str(LATEST_DATE.month)),
+                        ui.input_select("aoi", ui.span("Focus county", data_i18n="filter.focus_county"), AOIS),
+                        ui.input_select("year", ui.span("Year", data_i18n="filter.year"), YEAR_CHOICES, selected=str(LATEST_DATE.year)),
+                        ui.input_select("month", ui.span("Month", data_i18n="filter.month"), LATEST_MONTH_CHOICES, selected=str(LATEST_DATE.month)),
                         class_="map-filter-bar",
                     ),
                 ),
                 loading_frame(ui.output_ui("health_map"), "map", 540),
                 ui.div(
                     *[
-                        ui.span(ui.span(class_="health-dot", style=f"background:{color}"), label)
+                        ui.span(ui.span(class_="health-dot", style=f"background:{color}"), ui.span(label, data_i18n=f"gci_class.{i18n_slug(label)}"))
                         for label, color in STATUS_COLORS.items()
                     ],
-                    ui.span(ui.span(class_="raster-swatch"), "ESA grassland cover"),
+                    ui.span(ui.span(class_="raster-swatch"), ui.span("ESA grassland cover", data_i18n="drought.raster_legend")),
                     class_="grassland-legend",
                 ),
                 class_="panel-card map-card climate-map-card",
             ),
             ui.div(
                 ui.card(
-                    ui.card_header("Monthly signals vs long-term average", ui.output_ui("chart_note")),
+                    ui.card_header(ui.span("Monthly signals vs long-term average", data_i18n="drought.signal_card_title"), ui.output_ui("chart_note")),
                     loading_frame(output_widget("signal_chart"), "chart", 450),
                     class_="panel-card chart-card grassland-chart-card",
                 ),
                 ui.card(
-                    ui.card_header("Grazing movement guidance"),
+                    ui.card_header(ui.span("Grazing movement guidance", data_i18n="drought.movement_card_title")),
                     loading_frame(ui.output_ui("movement_guidance"), "copy", 230),
                     class_="panel-card movement-card",
                 ),
@@ -155,13 +156,13 @@ def drought_monitor_ui():
             class_="drought-workspace",
         ),
         ui.card(
-            ui.card_header("Ward assessment", ui.span("Selected monthly GCI observation with supporting indicators", class_="header-note")),
+            ui.card_header(ui.span("Ward assessment", data_i18n="drought.table_card_title"), ui.span("Selected monthly GCI observation with supporting indicators", class_="header-note", data_i18n="drought.table_card_note")),
             loading_frame(ui.output_data_frame("ward_table"), "table", 440),
             class_="panel-card observations-card",
         ),
         ui.div(
             ui.tags.i(class_="bi bi-info-circle"),
-            ui.span("Movement guidance is a screening signal, not a movement instruction. Confirm water access, land tenure, conflict risk and local authority advice before action."),
+            ui.span("Movement guidance is a screening signal, not a movement instruction. Confirm water access, land tenure, conflict risk and local authority advice before action.", data_i18n="drought.disclaimer"),
             class_="method-note",
         ),
         class_="page-shell drought-page",
@@ -234,19 +235,19 @@ def drought_monitor_server(input, output, session):
         very_good = int((frame["condition"] == "Very good").sum())
         median_score = frame["health_score"].median()
         cards = [
-            ("Very poor", str(very_poor), "Immediate field verification"),
-            ("Poor", str(poor), "Priority monitoring"),
-            ("Good / very good", str(good + very_good), "Potential local alternatives"),
-            ("Median GCI", f"{median_score:.1f}", AOIS[input.aoi()]),
+            ("Very poor", str(very_poor), "Immediate field verification", True),
+            ("Poor", str(poor), "Priority monitoring", True),
+            ("Good / very good", str(good + very_good), "Potential local alternatives", True),
+            ("Median GCI", f"{median_score:.1f}", AOIS[input.aoi()], False),
         ]
         return ui.div(*[
             ui.div(
-                ui.span(label, class_="metric-label"),
+                ui.span(label, class_="metric-label", data_i18n=f"metric_card.{i18n_slug(label)}"),
                 ui.strong(value, style=f"color:{STATUS_COLORS['Very poor']}" if label == "Very poor" else None),
-                ui.span(note, class_="metric-note"),
+                ui.span(note, class_="metric-note", data_i18n=f"metric_card_note.{i18n_slug(label)}" if translatable_note else None),
                 class_="metric-card",
             )
-            for label, value, note in cards
+            for label, value, note, translatable_note in cards
         ], class_="metric-grid")
 
     @render.ui
@@ -308,9 +309,9 @@ def drought_monitor_server(input, output, session):
         recommendations = movement_recommendations(AOIS[input.aoi()], selected_date())
         if declining.empty:
             return ui.div(
-                ui.span("NO STRONG DECLINE SIGNAL", class_="guidance-kicker"),
-                ui.h3("Maintain local monitoring"),
-                ui.p("No wards in the selected county are currently classified as poor or very poor."),
+                ui.span("NO STRONG DECLINE SIGNAL", class_="guidance-kicker", data_i18n="drought.guidance_none_kicker"),
+                ui.h3("Maintain local monitoring", data_i18n="drought.guidance_none_heading"),
+                ui.p("No wards in the selected county are currently classified as poor or very poor.", data_i18n="drought.guidance_none_body"),
                 class_="guidance-content",
             )
         origin_names = ", ".join(declining["ADM3_EN"].head(4))
@@ -326,12 +327,12 @@ def drought_monitor_server(input, output, session):
             for index, item in enumerate(recommendations, 1)
         ]
         return ui.div(
-            ui.span("EARLY-ACTION SCREEN", class_="guidance-kicker"),
+            ui.span("EARLY-ACTION SCREEN", class_="guidance-kicker", data_i18n="drought.guidance_kicker"),
             ui.h3(f"Grazing condition is poor around {origin_names}"),
-            ui.p("Assess good or very good wards within the county or directly across its border, limited to roughly 150 km from a poor-condition ward:"),
+            ui.p("Assess good or very good wards within the county or directly across its border, limited to roughly 150 km from a poor-condition ward:", data_i18n="drought.guidance_body"),
             ui.div(
                 *destination_items,
-                ui.p("No suitable stable or stronger ward was found locally or directly across the county border.", class_="no-destination") if not destination_items else None,
+                ui.p("No suitable stable or stronger ward was found locally or directly across the county border.", class_="no-destination", data_i18n="drought.guidance_no_destination") if not destination_items else None,
                 class_="destination-list",
             ),
             class_="guidance-content",

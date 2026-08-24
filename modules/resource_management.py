@@ -25,7 +25,7 @@ from services.resource_inventory import (
     save_resource,
 )
 
-from .data import AOIS
+from .data import AOIS, i18n_slug
 from .loading import loading_frame
 from .maplibre import map_container
 
@@ -130,29 +130,29 @@ def _resource_modal(county: str):
     return ui.modal(
         ui.div(
             ui.div(
-                ui.tags.span("COUNTY RESOURCE INVENTORY", class_="form-step"),
+                ui.tags.span("COUNTY RESOURCE INVENTORY", class_="form-step", data_i18n="resources.form_step"),
                 ui.p(f"Add a mapped resource to the {county} inventory. Coordinates must fall inside the county boundary."),
                 class_="resource-form-intro",
             ),
             ui.div(
-                ui.input_text("resource_name", "Resource name", placeholder="e.g. Manyatta community borehole"),
-                ui.input_select("resource_type", "Resource type", RESOURCE_TYPES),
+                ui.input_text("resource_name", ui.span("Resource name", data_i18n="resources.field_name"), placeholder="e.g. Manyatta community borehole"),
+                ui.input_select("resource_type", ui.span("Resource type", data_i18n="resources.field_type"), RESOURCE_TYPES),
                 class_="resource-form-grid two-column",
             ),
             ui.div(
-                ui.input_text("resource_ward", "Ward", placeholder="If known"),
-                ui.input_text("resource_village", "Village / settlement", placeholder="If known"),
+                ui.input_text("resource_ward", ui.span("Ward", data_i18n="resources.field_ward"), placeholder="If known"),
+                ui.input_text("resource_village", ui.span("Village / settlement", data_i18n="resources.field_village"), placeholder="If known"),
                 class_="resource-form-grid two-column",
             ),
             ui.div(
-                ui.input_select("resource_status", "Operating status", RESOURCE_STATUSES),
-                ui.input_text("resource_capacity", "Capacity / availability", placeholder="e.g. 20 m³/day or 400 kg seed"),
+                ui.input_select("resource_status", ui.span("Operating status", data_i18n="resources.field_status"), RESOURCE_STATUSES),
+                ui.input_text("resource_capacity", ui.span("Capacity / availability", data_i18n="resources.field_capacity"), placeholder="e.g. 20 m³/day or 400 kg seed"),
                 class_="resource-form-grid two-column",
             ),
             ui.div(
                 ui.input_selectize(
                     "geocode_result",
-                    "Find a Kenyan town or settlement",
+                    ui.span("Find a Kenyan town or settlement", data_i18n="resources.field_geocode"),
                     {"": "Start typing a place name", **KENYA_PLACE_CHOICES},
                     selected="",
                     options={"placeholder": "Type a town or settlement name", "maxOptions": 20},
@@ -160,29 +160,29 @@ def _resource_modal(county: str):
                 ui.div(
                     ui.input_action_button(
                         "use_resource_location",
-                        "Use my location",
+                        ui.span("Use my location", data_i18n="resources.field_use_location"),
                         icon=ui.tags.i(class_="bi bi-crosshair"),
                         class_="btn-use-resource-location",
                     ),
-                    ui.span("or enter coordinates manually below", class_="location-divider"),
+                    ui.span("or enter coordinates manually below", class_="location-divider", data_i18n="resources.field_or_manual"),
                     class_="location-action-row",
                 ),
-                ui.div("Choose GPS, town search, or manual coordinates.", class_="resource-location-status", aria_live="polite"),
+                ui.div("Choose GPS, town search, or manual coordinates.", class_="resource-location-status", aria_live="polite", data_i18n="resources.field_location_status"),
                 ui.p(
-                    "Town autocomplete runs locally from the GeoNames Kenya gazetteer. ",
+                    ui.span("Town autocomplete runs locally from the GeoNames Kenya gazetteer. ", data_i18n="resources.field_geocoder_disclosure"),
                     ui.tags.a("GeoNames attribution", href="https://www.geonames.org/", target="_blank", rel="noopener noreferrer"),
                     class_="geocoder-disclosure",
                 ),
                 class_="resource-location-tools",
             ),
             ui.div(
-                ui.input_text("resource_latitude", "Latitude", placeholder="e.g. 0.354620"),
-                ui.input_text("resource_longitude", "Longitude", placeholder="e.g. 37.582180"),
+                ui.input_text("resource_latitude", ui.span("Latitude", data_i18n="resources.field_latitude"), placeholder="e.g. 0.354620"),
+                ui.input_text("resource_longitude", ui.span("Longitude", data_i18n="resources.field_longitude"), placeholder="e.g. 37.582180"),
                 class_="resource-form-grid two-column coordinate-entry",
             ),
             ui.input_text_area(
                 "resource_notes",
-                "Notes",
+                ui.span("Notes", data_i18n="resources.field_notes"),
                 placeholder="Ownership, access, maintenance needs or seasonal constraints…",
                 rows=4,
             ),
@@ -195,7 +195,7 @@ def _resource_modal(county: str):
         footer=ui.div(
             ui.input_action_button(
                 "save_resource",
-                ui.tags.span("Save resource ", ui.tags.i(class_="bi bi-database-add")),
+                ui.tags.span(ui.span("Save resource ", data_i18n="resources.save_button"), ui.tags.i(class_="bi bi-database-add")),
                 class_="btn-save-resource",
             ),
             class_="resource-modal-footer",
@@ -214,19 +214,19 @@ def resource_management_ui():
     return ui.div(
         ui.div(
             ui.div(
-                ui.tags.span("COUNTY ACTION REPORT", class_="eyebrow"),
-                ui.h1("Plan from conditions to resources"),
-                ui.p("Turn monthly grazing indicators into a county brief, then map the assets available for early action."),
+                ui.tags.span("COUNTY ACTION REPORT", class_="eyebrow", data_i18n="resources.eyebrow"),
+                ui.h1("Plan from conditions to resources", data_i18n="resources.heading"),
+                ui.p("Turn monthly grazing indicators into a county brief, then map the assets available for early action.", data_i18n="resources.subtitle"),
                 ui.div(
-                    ui.span(ui.tags.i(class_="bi bi-file-earmark-bar-graph"), " Data-driven county brief"),
-                    ui.span(ui.tags.i(class_="bi bi-database"), " Mapped resource inventory"),
+                    ui.span(ui.tags.i(class_="bi bi-file-earmark-bar-graph"), ui.span(" Data-driven county brief", data_i18n="resources.chip_brief")),
+                    ui.span(ui.tags.i(class_="bi bi-database"), ui.span(" Mapped resource inventory", data_i18n="resources.chip_inventory")),
                     class_="hero-chips light-chips",
                 ),
             ),
             ui.div(
-                ui.input_select("county", "County", AOIS),
-                ui.input_select("year", "Year", YEAR_CHOICES, selected=str(LATEST_DATE.year)),
-                ui.input_select("month", "Month", latest_months, selected=str(LATEST_DATE.month)),
+                ui.input_select("county", ui.span("County", data_i18n="filter.county"), AOIS),
+                ui.input_select("year", ui.span("Year", data_i18n="filter.year"), YEAR_CHOICES, selected=str(LATEST_DATE.year)),
+                ui.input_select("month", ui.span("Month", data_i18n="filter.month"), latest_months, selected=str(LATEST_DATE.month)),
                 class_="county-report-filters",
             ),
             class_="page-hero module-hero resource-hero county-report-hero",
@@ -235,17 +235,17 @@ def resource_management_ui():
         ui.div(
             ui.card(
                 ui.card_header(
-                    ui.div(ui.span("COUNTY RESOURCE MAP", class_="map-card-kicker"), ui.output_ui("map_title")),
+                    ui.div(ui.span("COUNTY RESOURCE MAP", class_="map-card-kicker", data_i18n="resources.map_card_kicker"), ui.output_ui("map_title")),
                     ui.div(
                         ui.output_text("resource_count"),
-                        ui.input_action_button("open_resource_form", "Record resource", icon=ui.tags.i(class_="bi bi-plus-lg"), class_="btn-record-resource"),
+                        ui.input_action_button("open_resource_form", ui.span("Record resource", data_i18n="resources.record_button"), icon=ui.tags.i(class_="bi bi-plus-lg"), class_="btn-record-resource"),
                         class_="resource-map-actions",
                     ),
                 ),
                 loading_frame(ui.output_ui("resource_map"), "map", 500),
                 ui.div(
                     *[
-                        ui.span(ui.span(class_="resource-dot", style=f"background:{color}"), label)
+                        ui.span(ui.span(class_="resource-dot", style=f"background:{color}"), ui.span(label, data_i18n=f"resource_type.{i18n_slug(label)}"))
                         for label, color in RESOURCE_COLORS.items()
                     ],
                     class_="resource-type-legend",
@@ -254,8 +254,8 @@ def resource_management_ui():
             ),
             ui.card(
                 ui.card_header(
-                    "County planning brief",
-                    ui.download_button("download_report", "Download PDF", class_="btn-download-brief"),
+                    ui.span("County planning brief", data_i18n="resources.brief_card_title"),
+                    ui.download_button("download_report", ui.span("Download PDF", data_i18n="resources.download_pdf"), class_="btn-download-brief"),
                 ),
                 loading_frame(ui.output_ui("county_brief"), "copy", 500),
                 class_="panel-card county-brief-card",
@@ -264,12 +264,12 @@ def resource_management_ui():
         ),
         ui.div(
             ui.card(
-                ui.card_header("Selected month vs long-term reference", ui.output_ui("comparison_note")),
+                ui.card_header(ui.span("Selected month vs long-term reference", data_i18n="resources.comparison_card_title"), ui.output_ui("comparison_note")),
                 loading_frame(output_widget("comparison_chart"), "chart", 330),
                 class_="panel-card chart-card county-report-chart",
             ),
             ui.card(
-                ui.card_header("Next-month trend outlook", ui.output_ui("forecast_note")),
+                ui.card_header(ui.span("Next-month trend outlook", data_i18n="resources.forecast_card_title"), ui.output_ui("forecast_note")),
                 loading_frame(output_widget("forecast_chart"), "chart", 330),
                 class_="panel-card chart-card county-report-chart",
             ),
@@ -277,9 +277,9 @@ def resource_management_ui():
         ),
         ui.card(
             ui.card_header(
-                "Registered county resources",
+                ui.span("Registered county resources", data_i18n="resources.register_card_title"),
                 ui.div(
-                    ui.download_button("download_geopackage", "Download GeoPackage", class_="btn-download-gpkg"),
+                    ui.download_button("download_geopackage", ui.span("Download GeoPackage", data_i18n="resources.download_gpkg"), class_="btn-download-gpkg"),
                     class_="register-actions",
                 ),
             ),
@@ -374,7 +374,7 @@ def resource_management_server(input, output, session):
         ]
         return ui.div(
             *[
-                ui.div(ui.span(label), ui.strong(value), ui.tags.small(note), class_="county-metric-card")
+                ui.div(ui.span(label, data_i18n=f"metric_name.{i18n_slug(label)}"), ui.strong(value), ui.tags.small(note), class_="county-metric-card")
                 for label, value, note in cards
             ],
             class_="county-metric-strip",
@@ -522,27 +522,28 @@ def resource_management_server(input, output, session):
         bad_chips = [
             ui.span(f"{ward['ADM3_EN']} · {ward['GCI']:.1f}", class_="ward-chip bad")
             for ward in summary["bad_wards"]
-        ] or [ui.span("None in this month", class_="empty-ward-note")]
+        ] or [ui.span("None in this month", class_="empty-ward-note", data_i18n="resources.none_this_month")]
         good_chips = [
             ui.span(f"{ward['ADM3_EN']} · {ward['GCI']:.1f}", class_="ward-chip good")
             for ward in summary["good_wards"]
-        ] or [ui.span("None in this month", class_="empty-ward-note")]
+        ] or [ui.span("None in this month", class_="empty-ward-note", data_i18n="resources.none_this_month")]
+        condition = _condition(metrics["GCI"])
 
         return ui.div(
             ui.div(
                 ui.span(selected_date().strftime("%B %Y"), class_="brief-period"),
-                ui.span(_condition(metrics["GCI"]), class_=f"brief-condition condition-{_condition(metrics['GCI']).lower().replace(' ', '-')}")
+                ui.span(condition, class_=f"brief-condition condition-{condition.lower().replace(' ', '-')}", data_i18n=f"gci_class.{i18n_slug(condition)}" if condition != "No data" else "gci_class.no_data"),
             ),
             ui.h2(f"{AOIS[input.county()]} grazing and resource brief"),
             ui.p(
-                f"The county mean GCI is {metrics['GCI']:.1f}, classified as {_condition(metrics['GCI']).lower()}. "
+                f"The county mean GCI is {metrics['GCI']:.1f}, classified as {condition.lower()}. "
                 f"The assessment covers {summary['wards']} wards; {priority} {'is' if priority == 1 else 'are'} currently poor or very poor.",
                 class_="brief-lead",
             ),
             ui.div(
                 *[
                     ui.div(
-                        ui.span(REPORT_METRICS[column][0]),
+                        ui.span(REPORT_METRICS[column][0], data_i18n=f"metric_name.{i18n_slug(REPORT_METRICS[column][0])}"),
                         ui.strong(f"{metrics[column]:.3f}" if column in ("NDVI", "msdi") else f"{metrics[column]:.1f}"),
                         ui.tags.small(
                             f"LTA {baseline[column]:.3f} · {metrics[column] - baseline[column]:+.3f}"
@@ -556,26 +557,26 @@ def resource_management_server(input, output, session):
             ),
             ui.div(
                 ui.div(
-                    ui.span("PRIORITY WARDS", class_="ward-list-kicker bad"),
-                    ui.h3("Poor / very poor"),
+                    ui.span("PRIORITY WARDS", class_="ward-list-kicker bad", data_i18n="resources.priority_wards_kicker"),
+                    ui.h3("Poor / very poor", data_i18n="resources.priority_wards_heading"),
                     ui.div(*bad_chips, class_="ward-chip-list"),
                 ),
                 ui.div(
-                    ui.span("STRONGER WARDS", class_="ward-list-kicker good"),
-                    ui.h3("Good / very good"),
+                    ui.span("STRONGER WARDS", class_="ward-list-kicker good", data_i18n="resources.stronger_wards_kicker"),
+                    ui.h3("Good / very good", data_i18n="resources.stronger_wards_heading"),
                     ui.div(*good_chips, class_="ward-chip-list"),
                 ),
                 class_="ward-signal-grid",
             ),
             ui.div(
                 ui.div(
-                    ui.span("NEXT-MONTH OUTLOOK", class_="forecast-kicker"),
+                    ui.span("NEXT-MONTH OUTLOOK", class_="forecast-kicker", data_i18n="resources.outlook_kicker"),
                     ui.h3(outlook["target_date"].strftime("Trend estimate for %B %Y")),
                 ),
                 ui.div(
                     *[
                         ui.div(
-                            ui.span(REPORT_METRICS[column][0]),
+                            ui.span(REPORT_METRICS[column][0], data_i18n=f"metric_name.{i18n_slug(REPORT_METRICS[column][0])}"),
                             ui.strong(
                                 f"{outlook[column]['point']:.3f}" if column in ("NDVI", "msdi") and np.isfinite(outlook[column]["point"])
                                 else f"{outlook[column]['point']:.1f}" if np.isfinite(outlook[column]["point"])
@@ -593,14 +594,14 @@ def resource_management_server(input, output, session):
                     ],
                     class_="forecast-value-grid",
                 ),
-                ui.p("Ranges come from a linear trend fitted only to prior observations for the forecast month; they express statistical uncertainty, not a weather forecast.", class_="forecast-method"),
+                ui.p("Ranges come from a linear trend fitted only to prior observations for the forecast month; they express statistical uncertainty, not a weather forecast.", class_="forecast-method", data_i18n="resources.forecast_method_note"),
                 class_="brief-forecast-panel",
             ),
-            ui.h3("Recommended planning checks"),
+            ui.h3("Recommended planning checks", data_i18n="resources.planning_checks_heading"),
             ui.tags.ol(*[ui.tags.li(action) for action in actions], class_="brief-action-list"),
             ui.div(
                 ui.tags.i(class_="bi bi-info-circle"),
-                "This report is a screening brief. Confirm resource access, ownership, condition and local authority guidance before deployment.",
+                ui.span("This report is a screening brief. Confirm resource access, ownership, condition and local authority guidance before deployment.", data_i18n="resources.brief_caveat"),
                 class_="brief-caveat",
             ),
             class_="county-brief",
