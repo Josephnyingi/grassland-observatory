@@ -8,10 +8,16 @@ The dashboard therefore helps users:
 - compare current conditions with the usual value for the same month
 - distinguish vegetation stress from rainfall and temperature effects;
 - find stronger wards within the selected county or directly across its border
+- see the full multi-year climate history behind current conditions, including the documented 2020–2023 regional drought and 2023 recovery
 - make use of crowd sourcing to record boreholes, animal watering points, nurseries and grass seed banks
 - generate a county planning brief for evaluation
+- switch the interface between English and Swahili
 
 This is a screening tool, not a movement instruction or weather forecast. Recommendations must be checked against water availability, land tenure, conflict risk, resource ownership and local authority guidance.
+
+## Language
+
+The `EN / SW` toggle in the navbar switches the interface between English and Swahili — a client-side text swap (`www/i18n.js`) covering static UI chrome and the fixed vocabulary that renders dynamically (GCI classes, metric names, resource types). Ward names, dates, numbers, and compound sentences that interpolate data stay in English, as do values inside the data tables. The Swahili text is reasonably good standard Swahili but hasn't been reviewed by a native speaker — worth a pass before treating it as authoritative.
 
 ## Data sources
 
@@ -77,9 +83,9 @@ For the next calendar month, the county report fits a linear trend to prior obse
 
 ```text
 app.py                  Shiny application and ASGI entry point
-modules/                Overview, grassland health and county planning UI/server modules
+modules/                Overview, grassland health, climate history and county planning UI/server modules
 services/               Climate, spatial, raster, resource and PDF services
-www/                    Styles and browser-side map/location helpers
+www/                    Styles, browser-side map/location helpers, and the English/Swahili i18n script
 data/                   Ward/county boundaries, grassland raster, gazetteer and climate archive (see Data sources)
 output/                 Sample generated artifacts (e.g. a county report PDF)
 requirements.txt        Python runtime dependencies

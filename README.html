@@ -92,10 +92,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>compare current conditions with the usual value for the same month;</li>
 <li>distinguish vegetation stress from rainfall and temperature effects;</li>
 <li>find stronger wards within the selected county or directly across its border;</li>
+<li>see the full multi-year climate history behind current conditions, including the documented 2020–2023 regional drought and 2023 recovery;</li>
 <li>review boreholes, animal watering points, nurseries and grass seed banks; and</li>
 <li>generate a county planning brief for field discussion.</li>
+<li>switch the interface between English and Swahili.</li>
 </ul>
 <p>This is a screening tool, not a movement instruction or weather forecast. Recommendations must be checked against water availability, land tenure, conflict risk, resource ownership and local authority guidance.</p>
+</section>
+<section id="language" class="level2">
+<h2 class="anchored" data-anchor-id="language">Language</h2>
+<p>The <code>EN / SW</code> toggle in the navbar switches the interface between English and Swahili — a client-side text swap (<code>www/i18n.js</code>) covering static UI chrome and the fixed vocabulary that renders dynamically (GCI classes, metric names, resource types). Ward names, dates, numbers, and compound sentences that interpolate data stay in English, as do values inside the data tables. The Swahili text is reasonably good standard Swahili but hasn’t been reviewed by a native speaker — worth a pass before treating it as authoritative.</p>
 </section>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data sources</h2>
@@ -202,9 +208,9 @@ forecast = intercept + slope × target_year
 <section id="project-layout" class="level2">
 <h2 class="anchored" data-anchor-id="project-layout">Project layout</h2>
 <pre class="text"><code>app.py                  Shiny application and ASGI entry point
-modules/                Overview, grassland health and county planning UI/server modules
+modules/                Overview, grassland health, climate history and county planning UI/server modules
 services/               Climate, spatial, raster, resource and PDF services
-www/                    Styles and browser-side map/location helpers
+www/                    Styles, browser-side map/location helpers, and the English/Swahili i18n script
 data/                   Ward/county boundaries, grassland raster, gazetteer and climate archive (see Data sources)
 output/                 Sample generated artifacts (e.g. a county report PDF)
 requirements.txt        Python runtime dependencies
